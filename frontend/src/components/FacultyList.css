@@ -1,0 +1,350 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.user-info {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.logout-btn {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+}
+
+.logout-btn:hover {
+  background-color: rgba(214, 48, 49, 0.1);
+  color: var(--danger);
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 252, 255, 0.95) 100%);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 60px rgba(108, 92, 231, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.08);
+  padding: 3rem;
+  border: 1px solid rgba(108, 92, 231, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Profile Header Section */
+.profile-header-section {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+.profile-photo-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  padding: 4px;
+  background: white;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+}
+
+.profile-photo-container:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+
+.profile-photo-container img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--bg-body);
+}
+
+/* Photo Upload Overlay */
+.photo-upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.profile-photo-container:hover .photo-upload-overlay {
+  opacity: 1;
+}
+
+.photo-upload-label {
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.profile-title-info {
+  flex: 1;
+}
+
+.profile-title-info h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.profile-title-info p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.edit-btn-floating {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.edit-btn-floating:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(108, 92, 231, 0.4);
+}
+
+/* Profile View Details */
+.profile-view {
+  display: grid;
+  gap: 2rem;
+}
+
+.profile-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: baseline;
+}
+
+.profile-label {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.profile-value {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Course Chips */
+.course-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+}
+
+.course-chip {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.course-chip:hover {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+}
+
+.course-code {
+  opacity: 0.8;
+  font-size: 0.85rem;
+}
+
+/* Edit Form */
+.edit-form {
+  display: grid;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-group {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  background-color: var(--bg-body);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.checkbox-label:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 4px;
+  accent-color: var(--primary);
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  justify-content: flex-end;
+}
+
+/* Loading & Error */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: var(--primary);
+  font-weight: 600;
+  background-color: var(--bg-body);
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.access-denied-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+  background: white;
+  padding: 4rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  border-top: 6px solid var(--danger);
+}
+
+.access-denied-card h2 {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.access-denied-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 1.05rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+
+  .profile-header-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .profile-photo-container {
+    margin: 0 auto;
+  }
+
+  .profile-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .checkbox-group {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
