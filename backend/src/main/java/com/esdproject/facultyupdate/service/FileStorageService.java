@@ -54,8 +54,9 @@ public class FileStorageService {
         Path filePath = uploadPath.resolve(filename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Return relative path
-        return uploadDir + "/" + filename;
+        // Return relative path for database storage
+        // This ensures we store "uploads/faculty-photos/filename.jpg" regardless of the absolute uploadDir
+        return "uploads/faculty-photos/" + filename;
     }
 
     public void deleteFile(String filePath) throws IOException {

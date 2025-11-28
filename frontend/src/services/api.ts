@@ -1,5 +1,3 @@
-// utils folder
-
 import axios, { AxiosResponse } from 'axios'
 import type { ApiResponse, Course, Department, Faculty, FacultyFormPayload } from '../types/api'
 

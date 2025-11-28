@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useDevServer } from '../context/DevServerContext'
 import { facultyAPI, departmentAPI, courseAPI } from '../services/api'
 import type { Faculty, Department, Course } from '../types/api'
 import './FacultyList.css'
@@ -23,8 +22,10 @@ const FacultyProfile: React.FC = () => {
         departmentId: 0,
         courseIds: [] as number[]
     })
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
     const { logout, user } = useAuth()
-    const { isConnected, showError } = useDevServer()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -32,6 +33,15 @@ const FacultyProfile: React.FC = () => {
         void fetchDepartments()
         void fetchCourses()
     }, [])
+
+    // Cleanup preview URL on unmount or when it changes
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl)
+            }
+        }
+    }, [previewUrl])
 
     const fetchProfile = async (): Promise<void> => {
         try {
@@ -86,20 +96,25 @@ const FacultyProfile: React.FC = () => {
 
     const handleUpdate = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault()
-
-        // Check if dev server is connected
-        if (!isConnected) {
-            showError()
-            return
-        }
-
         console.log('Submitting update with formData:', formData)
         try {
+            // 1. Upload photo if selected
+            if (selectedFile) {
+                const photoResponse = await facultyAPI.uploadPhoto(selectedFile)
+                if (!photoResponse.data.success) {
+                    throw new Error('Failed to upload photo')
+                }
+            }
+
+            // 2. Update profile details
             const response = await facultyAPI.updateCurrentProfile(formData)
             console.log('Update response:', response.data)
+
             if (response.data.success) {
                 alert('Profile updated successfully!')
                 setIsEditing(false)
+                setSelectedFile(null)
+                setPreviewUrl(null)
                 await fetchProfile()
             } else {
                 alert('Failed to update profile: ' + (response.data.message || 'Unknown error'))
@@ -120,26 +135,33 @@ const FacultyProfile: React.FC = () => {
         }))
     }
 
-    const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-        // Check if dev server is connected
-        if (!isConnected) {
-            showError()
-            e.target.value = '' // Clear the file input
-            return
-        }
-
+    const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0]
-            try {
-                const response = await facultyAPI.uploadPhoto(file)
-                if (response.data.success) {
-                    alert('Photo uploaded successfully!')
-                    await fetchProfile()
-                }
-            } catch (err) {
-                alert('Failed to upload photo')
-                console.error(err)
-            }
+            setSelectedFile(file)
+
+            // Create preview URL
+            const url = URL.createObjectURL(file)
+            setPreviewUrl(url)
+        }
+    }
+
+    const handleCancel = () => {
+        setIsEditing(false)
+        setSelectedFile(null)
+        setPreviewUrl(null)
+        // Reset form data to current faculty values
+        if (faculty) {
+            setFormData({
+                id: faculty.id,
+                employeeId: faculty.employeeId || '',
+                firstName: faculty.firstName,
+                lastName: faculty.lastName,
+                email: faculty.email,
+                title: faculty.title || '',
+                departmentId: faculty.department?.departmentId || 0,
+                courseIds: faculty.courses?.map(c => c.courseId) || []
+            })
         }
     }
 
@@ -181,6 +203,10 @@ const FacultyProfile: React.FC = () => {
         return <div className="loading">No profile data available</div>
     }
 
+    // Determine image source: preview URL > faculty photo path > placeholder
+    const imageSource = previewUrl ||
+        (faculty.photographPath ? `http://localhost:8080/${faculty.photographPath}` : 'https://via.placeholder.com/150');
+
     return (
         <div className="container">
             <div className="header">
@@ -197,7 +223,7 @@ const FacultyProfile: React.FC = () => {
                 <div className="profile-header-section">
                     <div className="profile-photo-container">
                         <img
-                            src={faculty.photographPath ? `http://localhost:8080/${faculty.photographPath}` : 'https://via.placeholder.com/150'}
+                            src={imageSource}
                             alt="Profile"
                         />
                         {isEditing && (
@@ -220,13 +246,7 @@ const FacultyProfile: React.FC = () => {
                     </div>
                     <div style={{ marginLeft: 'auto' }}>
                         <button
-                            onClick={() => {
-                                if (!isEditing && !isConnected) {
-                                    showError()
-                                    return
-                                }
-                                setIsEditing(!isEditing)
-                            }}
+                            onClick={() => isEditing ? handleCancel() : setIsEditing(true)}
                             className={isEditing ? "btn btn-secondary" : "btn edit-btn-floating"}
                         >
                             {isEditing ? 'Cancel Edit' : 'Edit Profile'}
@@ -355,7 +375,7 @@ const FacultyProfile: React.FC = () => {
                             </div>
                         </div>
                         <div className="form-actions">
-                            <button type="button" onClick={() => setIsEditing(false)} className="btn btn-secondary">
+                            <button type="button" onClick={handleCancel} className="btn btn-secondary">
                                 Cancel
                             </button>
                             <button type="submit" className="btn btn-primary">

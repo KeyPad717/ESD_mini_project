@@ -13,12 +13,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Convert relative path to absolute path
-        String absoluteUploadDir = System.getProperty("user.dir") + "/" + uploadDir;
+        // Serve files from the project root's uploads directory
+        // We need to go up one level from backend/ to reach the project root
+        // Or better, use the absolute path we know: /home/iiitb/IdeaProjects/working_project/uploads/
         
-        // Map /uploads/** URLs to the upload directory root
-        // So /uploads/faculty-photos/file.jpg will serve from {projectRoot}/uploads/faculty-photos/file.jpg
+        String projectRootUploads = "/home/iiitb/IdeaProjects/working_project/uploads/";
+        
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
+                .addResourceLocations("file:" + projectRootUploads);
     }
 }
